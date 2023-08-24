@@ -19,6 +19,11 @@ error, or if A is a list, a df that is 4 by length(A), with an effect size
 and it's corresponding power, type s, and type m errors in each row.
 }
 \description{
+This function name is deprecated in favor of the more clearly named
+retro_design_closed_form; it won't be removed in any hurry, just trying
+to move the naming conventions to be clearer and easier to use.
+}
+\details{
 Calculates Power, Type S, and Type M error and returns them in a list or
 df, depending on whether a single true effect size or range is provided.
 Uses the closed form solution found for the Type-M error found by Lu et al.

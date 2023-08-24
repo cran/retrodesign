@@ -1,60 +1,117 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Andrew Timm" />
 
 
 <title>An Introduction to Type S and M errors in Hypothesis Testing</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
 
 
-<style type="text/css">code{white-space: pre;}</style>
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
 <style type="text/css" data-origin="pandoc">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -69,7 +126,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -80,7 +137,191 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
 
 </head>
 
@@ -89,111 +330,298 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">An Introduction to Type S and M errors in Hypothesis Testing</h1>
-<h4 class="author"><em>Andrew Timm</em></h4>
+<h1 class="title toc-ignore">An Introduction to Type S and M errors in
+Hypothesis Testing</h1>
+<h4 class="author">Andrew Timm</h4>
 
 
 
-<p>In light of the replication and reproducibility crisis, researchers across many fields have been reexamining their relationship with the Null Hypothesis Significance Testing (NHST) framework, and developing tools to more fully understand the implications of their research designs for replicable and reproducible science. One group of papers in this vein are works by Andrew Gelman, John Carlin, Francis Tuerlinckx, and others which develop two new metrics for better understanding hypothesis testing in noisy samples. For example, Gelman and Carlin’s <a href="http://www.stat.columbia.edu/~gelman/research/published/retropower20.pdf">Assessing Type S and Type M Errors</a> (2014) argues that looking at power, type I errors, and type II errors are insufficient to fully capture the risks of NHST analyses, in that such analysis focuses excessively on statistical significance. Instead, they argue for consideration of the probability you’ll get the sign on your effect wrong, or <strong>type S error</strong>, and the factor by which the magnitude of your effect might be overestimated, or <strong>type M</strong> error. Together, these additional statistics more fully explain the dangers of working in the NHST framework, especially in noisy, small sample environments.</p>
-<p><strong>retrodesign</strong> is a package designed to help researchers better understand type S and M errors and their implications for their research. In this vignette, I introduce both the need for the type S/M error metrics, and the tools retrodesign provides for examining them. I assume only a basic familiarity with hypothesis testing, and provide definitional reminders along the way.</p>
+<p>In light of the replication and reproducibility crisis, researchers
+across many fields have been reexamining their relationship with the
+Null Hypothesis Significance Testing (NHST) framework, and developing
+tools to more fully understand the implications of their research
+designs for replicable and reproducible science. One group of papers in
+this vein are works by Andrew Gelman, John Carlin, Francis Tuerlinckx,
+and others which develop two new metrics for better understanding
+hypothesis testing in noisy samples. For example, Gelman and Carlin’s <a href="http://www.stat.columbia.edu/~gelman/research/published/retropower20.pdf">Assessing
+Type S and Type M Errors</a> (2014) argues that looking at power, type I
+errors, and type II errors are insufficient to fully capture the risks
+of NHST analyses, in that such analysis focuses excessively on
+statistical significance. Instead, they argue for consideration of the
+probability you’ll get the sign on your effect wrong, or <strong>type S
+error</strong>, and the factor by which the magnitude of your effect
+might be overestimated, or <strong>type M</strong> error. Together,
+these additional statistics more fully explain the dangers of working in
+the NHST framework, especially in noisy, small sample environments.</p>
+<p><strong>retrodesign</strong> is a package designed to help
+researchers better understand type S and M errors and their implications
+for their research. In this vignette, I introduce both the need for the
+type S/M error metrics, and the tools retrodesign provides for examining
+them. I assume only a basic familiarity with hypothesis testing, and
+provide definitional reminders along the way.</p>
 <div id="an-initial-example" class="section level2">
 <h2>An Initial Example</h2>
-<p>To nail down the assumptions we’re working with, we’ll start with an abstract example from <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/bmsp.12132">Lu et al.</a> (2018); the second will draw on a real world scenario and follow Gelman and Carlin’s suggested workflow for design analysis more closely.</p>
-<p>Let’s say we’re testing whether a true effect size is zero or not, in a two tailed test.</p>
-<p><span class="math display">\[H _ { 0 } : \mu = 0 \quad \text { vs. } \quad H _ { 1 } : \mu \neq 0\]</span></p>
-<p>We’re assuming that the test statistic here is normally distributed. As <a href="http://www.stat.columbia.edu/~gelman/research/published/francis8.pdf">Gelman and Tuerlinckx</a> (2009) note, this is a pretty widely applicable assumption; through the Central Limit Theorem, it applies to common settings like differences between test and control groups in a randomized experiment, averages, or linear regression coefficients. If it helps, imagine the following in the context of one of those from your field.</p>
-<p>Traditionally, we’d focus on Type I/II errors. <strong>Type I error</strong> is rejecting the null hypothesis, when it is true. <strong>Type II error</strong> is failing to reject the null hypothesis, when it is not true. The <strong>power</strong>, then, is just is the probability that the test correctly rejects the null hypothesis when a specific alternative hypothesis is true.</p>
+<p>To nail down the assumptions we’re working with, we’ll start with an
+abstract example from <a href="https://bpspsychub.onlinelibrary.wiley.com/doi/full/10.1111/bmsp.12132">Lu
+et al.</a> (2018); the second will draw on a real world scenario and
+follow Gelman and Carlin’s suggested workflow for design analysis more
+closely.</p>
+<p>Let’s say we’re testing whether a true effect size is zero or not, in
+a two tailed test.</p>
+<p><span class="math display">\[H _ { 0 } : \mu = 0 \quad \text { vs. }
+\quad H _ { 1 } : \mu \neq 0\]</span></p>
+<p>We’re assuming that the test statistic here is normally distributed.
+As <a href="http://www.stat.columbia.edu/~gelman/research/published/francis8.pdf">Gelman
+and Tuerlinckx</a> (2009) note, this is a pretty widely applicable
+assumption; through the Central Limit Theorem, it applies to common
+settings like differences between test and control groups in a
+randomized experiment, averages, or linear regression coefficients. If
+it helps, imagine the following in the context of one of those from your
+field.</p>
+<p>Traditionally, we’d focus on Type I/II errors. <strong>Type I
+error</strong> is rejecting the null hypothesis, when it is true.
+<strong>Type II error</strong> is failing to reject the null hypothesis,
+when it is not true. The <strong>power</strong>, then, is just is the
+probability that the test correctly rejects the null hypothesis when a
+specific alternative hypothesis is true.</p>
 <p>Beyond those, we’ll also consider:</p>
 <ol style="list-style-type: decimal">
-<li><strong>Type S (sign)</strong>: the test statistic is in the opposite direction of the true effect size, given that the statistic is statistically significant;</li>
-<li><strong>Type M (magnitude or exaggeration ratio)</strong>: the test statistic in magnitude exaggerates the true effect size, given that the statistic is statistically significant.</li>
+<li><strong>Type S (sign)</strong>: the test statistic is in the
+opposite direction of the true effect size, given that the statistic is
+statistically significant;</li>
+<li><strong>Type M (magnitude or exaggeration ratio)</strong>: the test
+statistic in magnitude exaggerates the true effect size, given that the
+statistic is statistically significant.</li>
 </ol>
-<p>Notice that both of these are conditional on the test statistic being statistically significant; we’ll come back to this fact several times.</p>
-<p>To visualize these, we’ll draw 5000 samples from a normal distribution with mean .5, and standard deviation 1. We’ll then analyze these in a NHST setting where we have a standard error of 1. We can use <code>sim_plot()</code> to do so, with the first parameter being our postulated effect size .5, and the second being our hypothetical standard error of 1. If you prefer to not use ggplot graphics like I do here, set the <code>gg</code> argument to FALSE.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim_plot</span>(.<span class="dv">5</span>,<span class="dv">1</span>)</code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
-<p>Here, the dotted line is the true effect size, and the full lines are where the statistic becomes statistically significantly different from 0, given our standard error of 1. The greyed out points aren’t statistically significant, the squares are type M errors, and the triangles are type S errors.</p>
-<p>Even though the full distribution is faithfully centered around the true effect, once we filter using statistical significance, we will both exaggerate the effect and get its sign wrong often.</p>
-<p>Of course, trying to find a true effect size of .5 with a standard error of 1 is extremely underpowered. More precisely, the power, Type S and type M error here are:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">retro_design</span>(.<span class="dv">5</span>,<span class="dv">1</span>)
-<span class="co">#&gt; $power</span>
-<span class="co">#&gt; [1] 0.07909753</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $typeS</span>
-<span class="co">#&gt; [1] 0.0878352</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $typeM</span>
-<span class="co">#&gt; [1] 4.788594</span></code></pre></div>
-<p>The function arguments here the same as those for <code>sim_plot()</code> above. If you want to work with a t-distribution instead, you’ll need to use <code>retrodesign()</code> instead, and provide the degrees of freedom for the <code>df</code> argument. <code>retrodesign()</code> is the original function provided by Gelman &amp; Carlin (2014), which uses simulation rather than an exact solution to calculate the errors. It’s thus slower, but can work with t-distributions as well (the closed form solution only applies in the normal case).</p>
-<p>A power of .07 isn’t considered good research in most fields, so most cases won’t be this severe. However, it does illustrate two important points. In a underpowered example like this, we will hugely overestimate our effect size (by a factor of 4.7x! on average), or even get its sign wrong if we’re unlucky (around 8% of the time). Further, these are practical measures to focus on; getting the sign wrong could mean recommending the wrong drug treatment, exaggerating the treatment effect could mean undertreating someone once the drug goes to market.</p>
+<p>Notice that both of these are conditional on the test statistic being
+statistically significant; we’ll come back to this fact several
+times.</p>
+<p>To visualize these, we’ll draw 5000 samples from a normal
+distribution with mean .5, and standard deviation 1. We’ll then analyze
+these in a NHST setting where we have a standard error of 1. We can use
+<code>sim_plot()</code> to do so, with the first parameter being our
+postulated effect size .5, and the second being our hypothetical
+standard error of 1. If you prefer to not use ggplot graphics like I do
+here, set the <code>gg</code> argument to FALSE.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_plot</span>(.<span class="dv">5</span>,<span class="dv">1</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAq1BMVEUAAAAAADoAAGYAOpAAZrYzMzM6AAA6ADo6AGY6kNtNTU1NTW5NTY5NbqtNjshmAABmtv9uTU1uTW5uTY5ubo5ubqtuq+SOTU2OTW6OTY6Obk2OyP+QOgCQtpCQ2/+rbk2rbm6rbo6ryKur5OSr5P+2ZgC2//++vr7Ijk3I///bkDrb/7bb///kq27k///r6+v/tmb/yI7/25D/5Kv//7b//8j//9v//+T///9k1ymiAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAPqElEQVR4nO2dCZfUNhKAHWDZZbJcSZhsMixhN0DDbAYDDYz+/y/bdvuqUyXLku3uUT0e3V0ql6o+lw734alcEa9UawewdSmADCmADCmADCmADCmADJkCqB4FPvcrZ5su2RdQFkCGsgAylAWQoSyADGUwoNs/rgogn9xcFEA+2f/yewHkG2Cv/2yH2N8OYhXb9qRqZKYLf/PN5UnPQS2gKK9hgPYvPhZA3gK6aOSyAPJIqaBzBjTDNBgQkHWCLoByOyiAspieGaDjbFwA6coCyFAWQIayADKUBZChPEdAXU7zU8ljWgAZygLIUCYChLIsgLinUECUBgRUDc9mZi0gj/c6G1AbzQxAOK8pgEDXFdfbxxMtcLRlQOoqHQ8o0Ot2AAHj5QApZbUUIH8mJMztAaJxbQ8QbpkCSEzdKXaaVxJblRJQSCYsHS8gbypMmRDQaJwMkNzrDEDIMMStE0MQTFs7br0ooK6fjIBYwxkBctKkUQCpgNoDpUV2GiCtLxocOzc+BzMBjdLixi+r/kExr4QDUZvcLlkFBQcf2OGVrJa8hXV6FJV/Beq4IsqxguDZNRd04CuyguADq0oIKF0F6fGlAISDTQYIO65g4yYAke8OzAKkGpOjtg8Idi9/uSIQEM6Fgtg6IOCdoNgEILEvCRAw3w4gLWmBmHSygwD5yTrJYlFA/WMooJrWFSYDraVjwwAJ8Q0W2HQeINp3Bwh1LGc9ExDWnQIgEH2Ft/99WwygCuJwICnOh5+MisnWAQkhyOFPAiSlpbyL4gXEtMkA8fDCATlxAPgAyWdGYeEBBJVjIzdNCWhYAyrWuwCoAuNOJEoT9AIiKDAggl1A1xvisOYDIrUcAghnMQVQBUuA6r2AWo0OeBuApHimAhqtsFMdJQGEg1oQEEpRAKTGRE4qhW0BGuY7bgYyNgHV2HwFQGzhUQCxDIUD0MECoBruXwMB4cd8F6sQEK2NeEAkfREQ8BAOCD8AyQeIupdSVwgxpXUYc4Lbh4ZeAa66lNCGl5sHVKkVRwlo1gxQFxbo1ON8e4B4zuIKxglo1qGAakePTA4I5okBebDgFIRsWMr0YxEJUE2HGYrDkRZPbBkAweCcv3eauAxItEXHQZ1nMzGGhTv1dZQDkJ6KV1DRhGOlWxfPkRIgq68VAQUv54bU+ImnJMZVLCjAo+QHpCfGp1NPW6wIM68MSOlxRUDC7AtymOpLE+ENs1pcr8SlMOZabP/8Qr01RWwW7CRK6028kMDEWGvxVQSgb/964/Y/vfEB8oDSrjkFXfvEmaaDUJa1+FSNTNZOB/T5yeG/930JZQQ0bqT8poMwQNOWQlkbd7HaVBG7d8dut2tCbB46P0w6E6rbMdujP+EQ2e3ovDtoMGY2tJ/jYZUSrvYtj4Dfzfc3XkgyQ5yMhAL69uvApwASZP/8anwxDtAdkl7RDqGq1YH2Y4foNX7s3RCf4HXngHZMhPjrHbmhffA8OKpxw+Q5CPExAWGdlrou1C13F+hIi6PT8AxIYzig9u4vfBWzw4DUpqclRJ7sOC+g3URAWGqdkDc2IUiXAlqkoATqHT69qQDNTLAZ7CFmE/WBVqDvHlaNFCkABYWoxx4GSD18gpVgC2nQpiWHWDaZ0j8dQsSR4DoJoOAOhXDDE0smE+LdBKB1688vyQH5k90yCiB4x5WxgljHiuHGuLEt/GKA9JBmroJpZYOAtiUF0BTZKCBtsprZVUSwSQDNClqJa5I63O1kB1sFtBVJsw+CDldLJY8kB3RusiKg0+BqALquqmfX9//KAeg0Kq/2A3p7/39Pn31/+SAdIPRGVI6MUosX0Nenzw7/3Kd779JVUG98InyWBwR6Tp1LHvEOsetmiH19+sgaYnGEUqeSR/yT9KfmEzqNz4lei038gCHJMn9igCZZG3PQsYzMOeikAE0S/zJvAQKydiLZhGU6Aroevthg7oPOuIS8c1BXQaoAQOdbQukm6TMtIy+gLw+PQyzLRnGron34LAH6/vLR95fP9IEWDuiEEVpz0NtH7pN2OV8AHQBdP0hxLXa6o9C7D3Jvj3TUN4QmrPKnO1F5AR0mIfe2+uGVzGfiTjojoZzw0y3zZyoFkF/8c1DoPuiuAtLfjd4GoCW69QKyrsX6i9keUP+6d34urz0VFAqoThrQ1l7rc5DxTlCSIbbx+SvNJD0rglSpZBL/JK2+X58O0NZlziR9BxYxq4I2DWgRMeagf4RN0suFu1hPQ4/+IVaFTdIRcZ9M1XkryJC1d9KLSBJAayeRU1RAx692BA6xtZPIKaWCDAnYB8ELjm+/Xjz+eJcAGasYBXT7x5W7eVIAHUX6bP7bbx/c/ucPFNAZEwqpICD7Fx/lm5uc7Wfzjopxe5zHPSBcQWdbQrW3grqlHszRYwXdiSFm3rvj7QN3fe/d9d2dgwxAX9tvkaNV7DJuFTtVhiag5jvAd3kf5Af0/eWjTz+8agaaLOcJCGfjn4O+PDzsgd7aP2Y5L0JYvIAMEZb5FKhWAa5+yzIxoOmBaSFFe4zr2nPvHB+gwN+LJc5mE8O279+/Dwr8vVgWQAmdRvnqb5NmLfMhP4fy9B8XWjifsO9uRb1rvgig2DqYVUCJas8GFPt7sakBSjA283G/f5Je5Pdi9VjMKTJKC6j2A/JLqkl6PDwJI8vHlB/U1WkAzUsIR7SAj00A8gWRdN8d0m3EHNnapLqn/bSQ8+0BrWIOv5cY8LjcEOvM5t1Tcp5M3lwlAsR+QuTrPQIQDHjqsZP7QvmkAtRdCw/XL1YI8FXiBGfLlPeDpgIKDQGepM0BIpIe0MSf/kRXE0GcdvDVbJqeCyguNxFW4I+HarQBD53Z5Gr3XW2nriBj/gmKzPv2wLEvNpWGT/3MzntkqjlI7552F5iGfPiYDpnp59zxO4hP8rdcRRRJ5gl5HGqAQmZEvS3dX4ea1u+stUuZqESPLrJk21KN/NM1svDY2v/l7314vg3i/M2DA2oCFQ6YBX/xRMpBkMSfashNnlnL9Ch40H066mzitVriIdYXpraKK9ruiBqJjwUw1rx2Lh21M8jzgZsWUF2TTpSLCh4H9CUA4kvzTiDHqTpIXjqEI8oDCPARugMFJoeBahl46WcFJStPthyxxDlgAl8JEJNh84fGiTG/6vUg1KBWh4bkBUSGXm3GhNIwL4HlrPsWQSlqFA+oj7mAelekA8d66acCLRyUmbmFgX07pUXshRgyW5RUMkBSBjyMbvNF4xmf7oSnmnsIiC5o+uhDpqC4SbBkaU0HSNtV97lwQKAA6jFIEPBOxkUraCxOHVBNAQ1a0h0toWSA9MEPADEDoqQ1NcZL+fCdBWqRCDlqvkOnCE8YWQE5nC0dR2g6xm7GF3UNNbiwaikApHe0p6EvXsMMTEJAmNDg2A3JUSCEQrcPQkmKpIaKITIBUG/CASFnGQGNQTjUmZoKZgJ9QmyQO4UjTrEIECdEFTgbHk5mQLIlAVTviDkcDIgj9SYPvD4C2A0FNE7SNSlO4jABILZW0j6JDYoU5ksAkdQwkf4IhzljBzREBKB7TVcxFsssQHgCJfn17YyiDqgPmjGtCWEAqEYOaQSkcwISnVp8BhIBcrifepxC5P5pvtLK0i+D2iKJ1PRN+7rHhgChnvH5zQsI9gj8ewDhoqOAWa6miJ9qxADa5QCEPEH/TFeDT21gaJO+CIH2A4GA6GDVAYENObTLCwjOTnjq9gMiazhuQwfArTjZURES5AyxmOFElvT7QfhcIR1KzEltYD0GSZKZCXsiWaOzIFmNqQo6dFh6QLUUicIHTYMgkjGdMUq0zA9LoRsd4aypCx8g1gROxhh+ujftpbMyKGVAAyW6jRmf9oMBooRX415ANTWRTUmw3GsWQH0mCiCwLSKAQIGxNODBfJGB2Y3nQctaBMR55gI0ZI0BtU/Re3/AFFcYQoK8guNAM3/Xf9QisjogoeKWBURxwagxIJbo8JJwCgFUYbL6HJQE0P75xcXVREAkFc5BBSQsyGSmqURAVW9RHf5190UkgJhIgKrJgJrfzO9/6n83X90lCQP0uflJ+Pu+hNaOeVEJHGJdFfF7dyAZ/B0fd6gDwVZp1o/qGwSLykknjpmEiNy/eXRzb4FO1Dmoau9/euyifdlpuGnXWNVciBo46BrgkQ70DBoFz3JnbGaiR9uA3l9cPGnuLDDwUQH1np2YOWOpECLq8bmT7AEgTo/6FbTCeavjVrGr8YXmvo9NjtG76a5ELc7LSX7d2DGoL6EvjVsaQIhP8KVGgBaOENG0Z+5zUEFAWgVpeqGwIwDdXDTSQwrMOkQbBoidVmQqlK0ZViVqBy8LXawGaN0YlmpaDadVLgB9ZlKVlQKod7VJQJVmOgCSR4g6M+kBwAMcWjE3CsirHQaZs9fGwL4gIOhTGs1JAVWSsm+YDUicZGMAwZpDTnMDqjRAdGWIyk9eqOdWq7m0JQQ09JUHkLxOO7qH0h1ISmXxXxgQWzqNTKaVhb25ifE6Pk0GaDwZ8uVNv+WJDVpJJXxmWhtQYCTqljAylXMDpO+ZuTZkc6POTNPC0pUrANL3zNR0Wip5TBcG5L+owFpaGXcHkHpRwUwnpZLHdGFAE0zZ5FIAIS2ffQugzA4KoCymBZChLIAMZQFkKAsgQ1kAGcoCyFAWQIYyBtCdlFJBirIAMpTrApK+hhGdSh7TVQGJn0lFp5LHtAAylGsCkj+0i04lj+nqgAK+9ZWir2jTNQFNMy2AcjsogLKYFkCGsgAylAWQoSyADGUBZCgLIEMZAwiI/tOoczMtgAzTAsgwLYAM0/KmvSEFkCEFkCEFkCEFkCExgNDfWJdl//OHwQ4/UMP23hchpp8vLv4Z6LX5NXug1+ZXpwe3qmkEoKbvmydek89Nn50dfiDS3fsixLRhzmzUWG4O2INM2/tK6KYRgL799qGtEFXe//jfQ3tnhx+IZXfvixDTRpiNZrr/5feroABuX78BOQmmEYD2Lz5296vw2Bzcd3b4QbBlNrrp4bQGmd6+/vNQBCGmh8HUjHHdNALQ58dhgDo7/MBNm3tfhJnun//4Jsz05rIZJSGmzb1tDlWkm65eQcd7XyQutoP2NrCCjvL+KmkF2XNQCyhotmjv7RA6BwVOV+39EC6TeI1axS6tVezovrPDD9Tu+RVw6TXt6j7E1LXLUqjX2/980E1X3gf1974I3LEc5qAM+yCv17KTNqQAMqQAMqQAMqQAMqQAMqQAMqQAMqQAMmTjgL78/d8Pq+rZihFsHdDD+3+563vv1otg84CeNWX0ar0Itg6oYVMA6VIAGVIAGVIAGVIAbV4KIEMKIEMKIEMKIEMKIEMKIEMKIEMKIEMKIEP+D/+JXFCqw7tuAAAAAElFTkSuQmCC" /><!-- --></p>
+<p>Here, the dotted line is the true effect size, and the full lines are
+where the statistic becomes statistically significantly different from
+0, given our standard error of 1. The greyed out points aren’t
+statistically significant, the squares are type M errors, and the
+triangles are type S errors.</p>
+<p>Even though the full distribution is faithfully centered around the
+true effect, once we filter using statistical significance, we will both
+exaggerate the effect and get its sign wrong often.</p>
+<p>Of course, trying to find a true effect size of .5 with a standard
+error of 1 is extremely underpowered. More precisely, the power, Type S
+and type M error here are:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">retro_design_closed_form</span>(.<span class="dv">5</span>,<span class="dv">1</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $power</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.07909753</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $type_s</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.0878352</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $type_m</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 4.788594</span></span></code></pre></div>
+<p>The function arguments here the same as those for
+<code>sim_plot()</code> above. If you want to work with a t-distribution
+instead, you’ll need to use <code>retrodesign()</code> instead, and
+provide the degrees of freedom for the <code>df</code> argument.
+<code>retrodesign()</code> is an update to the original function
+provided by Gelman &amp; Carlin (2014), which uses simulation rather
+than an exact solution to calculate the errors. It’s thus slower, but
+can work with non-central t-distributions as well (the closed form
+solution only applies in the normal case).</p>
+<p>A power of .07 isn’t considered good research in most fields, so most
+cases won’t be this severe. However, it does illustrate two important
+points. In a underpowered example like this, we will hugely overestimate
+our effect size (by a factor of 4.7x! on average), or even get its sign
+wrong if we’re unlucky (around 8% of the time). Further, these are
+practical measures to focus on; getting the sign wrong could mean
+recommending the wrong drug treatment, exaggerating the treatment effect
+could mean undertreating someone once the drug goes to market.</p>
 </div>
 <div id="a-severe-example" class="section level2">
 <h2>A Severe Example</h2>
-<p>Now that you hopefully have a sense of what type S/M error add to our understanding of NHST in the context of noisy, small sample studies, we’ll move onto a real world example, where we’ll focus on following Gelman and Carlin’s suggested design analysis through one of their examples.</p>
-<p>We’ll be working with <a href="https://www.ncbi.nlm.nih.gov/pubmed/16949101">Kanazawa</a> (2007), which claims to have found that the most attractive people are more likely to have girls. To be more specific, each of their ~3,000 people surveyed had been assigned a “attractiveness” score from 1-5, and they then compared the first born children of the most attractive to other groups; 56% were girls compared to 48% in the other groups. They thus obtained a difference estimate of 8%, with a p-value of .015, so significant at the traditional <span class="math inline">\(\alpha = .05\)</span>.</p>
-<p>Stepping back for a second, this is fishy in numerous ways. First, comparing the first borne children is an oddly specific comparison to have run- at worst, this might be a case of p-hacking. Or maybe they saw a strong comparison, and decided to test it, and in doing so fell into a <a href="http://www.stat.columbia.edu/~gelman/research/unpublished/p_hacking.pdf">Garden of Forking Paths</a> problem. Second, if attractive people had many more girls, it seems unlikely that gender balance would be as even as it is. So again, this example has a likely spurious result, is likely to have low power, and a high chance of S/M errors.</p>
-<p>To do a design analysis of this, Gelman and Carlin’s first step is to review the literature for a posited true effect size. There is plenty of prior research on variation in sex ratio of human births. A huge variety of factors have been studied such as race, parental age, season of birth, and so on, only finding effects from .3% to 2%. In the most extreme cases (conditions like extreme poverty or famine), these effects only rise to 3%. (If you’re interested, the causal reasoning seems to be that male fetuses are more likely than female ones to die under adverse conditions.)</p>
-<p>Like traditional design analyses, we’ll posit a wide range of effects here, and see how our power, type S error, and type M error rates change correspondingly. Gelman and Carlin end up looking at .1-1%, reasoning that sex ratios vary very little in general, and that the subject attractiveness rating is quite noisy as well. Even if we compare their effect size to the effect sizes found in the most extreme scenarios in prior literature, it doesn’t look good.</p>
-<p>We can infer their standard error of the difference to be 3.3% from their reported 8% estimate and p-value of .015; we now have everything we need.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># The posited effects Gelman and Carlin consider</span>
-<span class="kw">retro_design</span>(<span class="kw">list</span>(.<span class="dv">1</span>,.<span class="dv">3</span>,<span class="dv">1</span>),<span class="fl">3.3</span>)
-<span class="co">#&gt;   effect_size      power    type_s   type_m</span>
-<span class="co">#&gt; 1         0.1  0.0501052 0.4646377 77.15667</span>
-<span class="co">#&gt; 2         0.3 0.05094724 0.3953041 25.74305</span>
-<span class="co">#&gt; 3           1 0.06058446 0.1950669 7.795564</span>
-
-<span class="co"># A particularly charitable set of posited effects</span>
-<span class="kw">retro_design</span>(<span class="kw">list</span>(.<span class="dv">1</span>,.<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),<span class="fl">3.3</span>)
-<span class="co">#&gt;   effect_size      power     type_s   type_m</span>
-<span class="co">#&gt; 1         0.1  0.0501052  0.4646377 77.15667</span>
-<span class="co">#&gt; 2         0.3 0.05094724  0.3953041 25.74305</span>
-<span class="co">#&gt; 3           1 0.06058446  0.1950669 7.795564</span>
-<span class="co">#&gt; 4           2 0.09302718 0.05529112 3.982141</span>
-<span class="co">#&gt; 5           3  0.1487169 0.01384174 2.719244</span></code></pre></div>
-<p>By providing a list for our first argument <code>A</code>, we get a dataframe with a posited effect size, and corresponding power, type S, and type M errors in each row. If you just want the lists of power/type S/type M, you can just feed in a vector, ie <code>c(.1,.3,1)</code>.</p>
-<p>So if we go with a high but fairly reasonable posited effect of 1%, there’s a nearly 1 in 5 chance that such an experiment would get the direction of the effect wrong. Even if we assume that being the daughter of a highly attractive person has equivalent effect to being born in a famine (effect size 3%), this experiment would exaggerate the true effect size by a factor of 2.7x on average.</p>
-<p>This analysis has given us added information beyond what we’d get from the point estimate, the confidence interval, and the p-value. Under reasonable assumptions about the true effect size, this study simply seems too small to be informative: Under most assumptions, we’re quite likely to get the sign wrong, and even with a quite generous assumption of true effect size we’ll greatly exaggerate the effect size.</p>
+<p>Now that you hopefully have a sense of what type S/M error add to our
+understanding of NHST in the context of noisy, small sample studies,
+we’ll move onto a real world example, where we’ll focus on following
+Gelman and Carlin’s suggested design analysis through one of their
+examples.</p>
+<p>We’ll be working with <a href="https://pubmed.ncbi.nlm.nih.gov/16949101/">Kanazawa</a> (2007),
+which claims to have found that the most attractive people are more
+likely to have girls. To be more specific, each of their ~3,000 people
+surveyed had been assigned a “attractiveness” score from 1-5, and they
+then compared the first born children of the most attractive to other
+groups; 56% were girls compared to 48% in the other groups. They thus
+obtained a difference estimate of 8%, with a p-value of .015, so
+significant at the traditional <span class="math inline">\(\alpha =
+.05\)</span>.</p>
+<p>Stepping back for a second, this is fishy in numerous ways. First,
+comparing the first borne children is an oddly specific comparison to
+have run- at worst, this might be a case of p-hacking. Or maybe they saw
+a strong comparison, and decided to test it, and in doing so fell into a
+<a href="http://www.stat.columbia.edu/~gelman/research/unpublished/p_hacking.pdf">Garden
+of Forking Paths</a> problem. Second, if attractive people had many more
+girls, it seems unlikely that gender balance would be as even as it is.
+So again, this example has a likely spurious result, is likely to have
+low power, and a high chance of S/M errors.</p>
+<p>To do a design analysis of this, Gelman and Carlin’s first step is to
+review the literature for a posited true effect size. There is plenty of
+prior research on variation in sex ratio of human births. A huge variety
+of factors have been studied such as race, parental age, season of
+birth, and so on, only finding effects from .3% to 2%. In the most
+extreme cases (conditions like extreme poverty or famine), these effects
+only rise to 3%. (If you’re interested, the causal reasoning seems to be
+that male fetuses are more likely than female ones to die under adverse
+conditions.)</p>
+<p>Like traditional design analyses, we’ll posit a wide range of effects
+here, and see how our power, type S error, and type M error rates change
+correspondingly. Gelman and Carlin end up looking at .1-1%, reasoning
+that sex ratios vary very little in general, and that the subject
+attractiveness rating is quite noisy as well. Even if we compare their
+effect size to the effect sizes found in the most extreme scenarios in
+prior literature, it doesn’t look good.</p>
+<p>We can infer their standard error of the difference to be 3.3% from
+their reported 8% estimate and p-value of .015; we now have everything
+we need.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The posited effects Gelman and Carlin consider</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">retro_design_closed_form</span>(<span class="fu">list</span>(.<span class="dv">1</span>,.<span class="dv">3</span>,<span class="dv">1</span>),<span class="fl">3.3</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   effect_size      power    type_s   type_m</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1         0.1  0.0501052 0.4646377 77.15667</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2         0.3 0.05094724 0.3953041 25.74305</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3           1 0.06058446 0.1950669 7.795564</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># A particularly charitable set of posited effects</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">retro_design_closed_form</span>(<span class="fu">list</span>(.<span class="dv">1</span>,.<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),<span class="fl">3.3</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   effect_size      power     type_s   type_m</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1         0.1  0.0501052  0.4646377 77.15667</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2         0.3 0.05094724  0.3953041 25.74305</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3           1 0.06058446  0.1950669 7.795564</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4           2 0.09302718 0.05529112 3.982141</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5           3  0.1487169 0.01384174 2.719244</span></span></code></pre></div>
+<p>By providing a list for our first argument <code>A</code>, we get a
+dataframe with a posited effect size, and corresponding power, type S,
+and type M errors in each row. If you just want the lists of power/type
+S/type M, you can just feed in a vector, ie <code>c(.1,.3,1)</code>.</p>
+<p>So if we go with a high but fairly reasonable posited effect of 1%,
+there’s a nearly 1 in 5 chance that such an experiment would get the
+direction of the effect wrong. Even if we assume that being the daughter
+of a highly attractive person has equivalent effect to being born in a
+famine (effect size 3%), this experiment would exaggerate the true
+effect size by a factor of 2.7x on average.</p>
+<p>This analysis has given us added information beyond what we’d get
+from the point estimate, the confidence interval, and the p-value. Under
+reasonable assumptions about the true effect size, this study simply
+seems too small to be informative: Under most assumptions, we’re quite
+likely to get the sign wrong, and even with a quite generous assumption
+of true effect size we’ll greatly exaggerate the effect size.</p>
 </div>
 <div id="assessing-type-sm-errors-when-you-dont-have-prior-information" class="section level2">
 <h2>Assessing Type S/M errors when you don’t have prior information</h2>
-<p>One obvious objection you might have to this framework is that you may not have a clear sense of what your effect size will be. As extreme as it sounds, you may not even have a sense of the right order of magnitude. In these cases, it makes even more sense to calculate type s/m errors across a variety of posited effect sizes and see how they influence your research.</p>
+<p>One obvious objection you might have to this framework is that you
+may not have a clear sense of what your effect size will be. As extreme
+as it sounds, you may not even have a sense of the right order of
+magnitude. In these cases, it makes even more sense to calculate type
+s/m errors across a variety of posited effect sizes and see how they
+influence your research.</p>
 </div>
 <div id="so-how-worried-should-we-be-in-more-reasonable-studies" class="section level2">
 <h2>So how worried should we be in more reasonable studies?</h2>
-<p>Another concern might be that my first two examples were severely underpowered. However, even with powers that are publishable in many fields, we should still be worried about type M errors, but not type S errors.</p>
-<p>To sketch out the relationship between possible effect sizes and these errors, we adopt the standard error from the prior example, but greatly expand the posited effect sizes, to max out at 10, where the power would be a perfectly reasonable .85. We’ll use <code>type_s</code> and <code>type_m</code>, both of which take a single or list of possible <code>A</code>’s, and a standard error, similar to <code>retrodesign</code>, but only return the respective error.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">possible_effects &lt;-<span class="st"> </span><span class="kw">seq</span>(.<span class="dv">1</span>,<span class="dv">10</span>, <span class="dt">by =</span> .<span class="dv">5</span>)
-effect_s_pairs &lt;-<span class="st"> </span><span class="kw">data.frame</span>(possible_effects,<span class="kw">type_s</span>(possible_effects,<span class="fl">3.3</span>))
-effect_m_pairs &lt;-<span class="st"> </span><span class="kw">data.frame</span>(possible_effects,<span class="kw">type_m</span>(possible_effects,<span class="fl">3.3</span>))
-
-s_plot&lt;-<span class="st"> </span><span class="kw">ggplot</span>(effect_s_pairs, <span class="kw">aes</span>(possible_effects, type_s)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
-m_plot &lt;-<span class="st"> </span><span class="kw">ggplot</span>(effect_m_pairs, <span class="kw">aes</span>(possible_effects, type_m)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()
-
-<span class="kw">grid.arrange</span>(s_plot, m_plot, <span class="dt">ncol=</span><span class="dv">2</span>)</code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
-<p>As <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/bmsp.12132">Lu et al.</a> (2018) note, the type S and M error shrink at very different rates as power rises.</p>
-<p>They find the probability of type S error decreases rapidly. To ensure that <span class="math inline">\(s ≤ 0.1\)</span> and <span class="math inline">\(s ≤ 0.01\)</span>, we only need <span class="math inline">\(power = 0.08\)</span> and <span class="math inline">\(power = 0.17\)</span>, respectively. Thus, unless your study is severely underpowered, you shouldn’t need to worry about type s errors very often.</p>
-<p>On the other hand, The type m error decreases relatively slowly. To ensure that <span class="math inline">\(m ≤ 1.5\)</span> and <span class="math inline">\(m ≤ 1.1\)</span>, we need <span class="math inline">\(power = 0.52\)</span> and <span class="math inline">\(power = 0.85\)</span>, respectively. Whereas even moderately powered studies make type s errors relatively improbable, only very high powered studies keep exaggeration of effect sizes down. If your field requires a power of .80, you should thus be cognizant that effect sizes are likely somewhat inflated.</p>
+<p>Another concern might be that my first two examples were severely
+underpowered. However, even with powers that are publishable in many
+fields, we should still be worried about type M errors, but not type S
+errors.</p>
+<p>To sketch out the relationship between possible effect sizes and
+these errors, we adopt the standard error from the prior example, but
+greatly expand the posited effect sizes, to max out at 10, where the
+power would be a perfectly reasonable .85. We’ll use <code>type_s</code>
+and <code>type_m</code>, both of which take a single or list of possible
+<code>A</code>’s, and a standard error, similar to
+<code>retrodesign</code>, but only return the respective error.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>possible_effects <span class="ot">&lt;-</span> <span class="fu">seq</span>(.<span class="dv">1</span>,<span class="dv">10</span>, <span class="at">by =</span> .<span class="dv">5</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>effect_s_pairs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(possible_effects,<span class="fu">type_s</span>(possible_effects,<span class="fl">3.3</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>effect_m_pairs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(possible_effects,<span class="fu">type_m</span>(possible_effects,<span class="fl">3.3</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>s_plot<span class="ot">&lt;-</span> <span class="fu">ggplot</span>(effect_s_pairs, <span class="fu">aes</span>(possible_effects, type_s)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>m_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(effect_m_pairs, <span class="fu">aes</span>(possible_effects, type_m)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(s_plot, m_plot, <span class="at">ncol=</span><span class="dv">2</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Removed 14 rows containing missing values (geom_point).</span></span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>As <a href="https://bpspsychub.onlinelibrary.wiley.com/doi/full/10.1111/bmsp.12132">Lu
+et al.</a> (2018) note, the type S and M error shrink at very different
+rates as power rises.</p>
+<p>They find the probability of type S error decreases rapidly. To
+ensure that <span class="math inline">\(s ≤ 0.1\)</span> and <span class="math inline">\(s ≤ 0.01\)</span>, we only need <span class="math inline">\(power = 0.08\)</span> and <span class="math inline">\(power = 0.17\)</span>, respectively. Thus, unless
+your study is severely underpowered, you shouldn’t need to worry about
+type s errors very often.</p>
+<p>On the other hand, The type m error decreases relatively slowly. To
+ensure that <span class="math inline">\(m ≤ 1.5\)</span> and <span class="math inline">\(m ≤ 1.1\)</span>, we need <span class="math inline">\(power = 0.52\)</span> and <span class="math inline">\(power = 0.85\)</span>, respectively. Whereas even
+moderately powered studies make type s errors relatively improbable,
+only very high powered studies keep exaggeration of effect sizes down.
+If your field requires a power of .80, you should thus be cognizant that
+effect sizes are likely somewhat inflated.</p>
 </div>
 <div id="solutions-outside-nhst" class="section level2">
 <h2>Solutions outside NHST</h2>
-<p>For the majority of this vignette, I’ve avoided questioning whether we should be working in the NHST framework. However, <code>retrodesign</code> is a package to help address some limitations of NHST work as it’s traditionally practiced, so it makes sense to address these solutions.</p>
-<p>Going back to the plot we started with, remember that the underlying gaussian does actually faithfully center around it’s mean of .5.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sim_plot</span>(.<span class="dv">5</span>,<span class="dv">1</span>)</code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
-<p>Type S and M errors are an artifact of the hard thresholding implicit in a NHST environment, where an arbitrary p-value (usually .05) decides what is and isn’t noteworthy.</p>
-<p>If you have to work in the NHST because it’s what your discipline publishes, you can better understand some problems it might cause by exploring type S and M errors. If you’re able to choose how you analyze your experiments though, you can avoid these errors (and many others) by abandoning statistical significance as a hard filter entirely. If learning more about problems with NHST beyond type S and M errors, and suggestions for alternative strategies is interesting to you, check out the <strong>Abandon Statistical Significance</strong> paper linked in the further reading below.</p>
+<p>For the majority of this vignette, I’ve avoided questioning whether
+we should be working in the NHST framework. However,
+<code>retrodesign</code> is a package to help address some limitations
+of NHST work as it’s traditionally practiced, so it makes sense to
+address these solutions.</p>
+<p>Going back to the plot we started with, remember that the underlying
+gaussian does actually faithfully center around it’s mean of .5.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sim_plot</span>(.<span class="dv">5</span>,<span class="dv">1</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Type S and M errors are an artifact of the hard thresholding implicit
+in a NHST environment, where an arbitrary p-value (usually .05) decides
+what is and isn’t noteworthy.</p>
+<p>If you have to work in the NHST because it’s what your discipline
+publishes, you can better understand some problems it might cause by
+exploring type S and M errors. If you’re able to choose how you analyze
+your experiments though, you can avoid these errors (and many others) by
+abandoning statistical significance as a hard filter entirely. If
+learning more about problems with NHST beyond type S and M errors, and
+suggestions for alternative strategies is interesting to you, check out
+the <strong>Abandon Statistical Significance</strong> paper linked in
+the further reading below.</p>
 </div>
 <div id="further-reading" class="section level2">
 <h2>Further Reading</h2>
 <ol style="list-style-type: decimal">
-<li><strong>Gelman and Tuerlinckx’s <a href="http://www.stat.columbia.edu/~gelman/research/published/francis8.pdf">Type S error rates for classical and Bayesian single and multiple comparisons procedures</a> (2000)</strong>: A comparison of the properties of Type S errors of frequentist and Bayesian confidence statements. Useful for how this all plays out in a Bayesian context. Bayesian confidence statements have the desirable property of being more conservative than frequentist ones.</li>
-<li><strong>Gelman and Carlin’s <a href="http://www.stat.columbia.edu/~gelman/research/published/retropower20.pdf">Assessing Type S and Type M Errors</a> (2014)</strong>: Gelman and Carlin compare their suggested design analysis, as we’ve written about above, to more traditional design analysis, through several examples, and discuss the desirable properties it has in more depth than I do here. It is also the source of the original retrodesign() function, which I re-use in the package with permission.</li>
-<li><strong>Lu et al’s <a href="https://onlinelibrary.wiley.com/doi/full/10.1111/bmsp.12132">A note on Type S/M errors in hypothesis testing</a> (2018)</strong>: Lu and coauthors go further into the mathematical properties of Type S/M errors, and prove the closed form solutions implemented in <code>retrodesign</code>.</li>
-<li><strong>McShane et al’s <a href="https://arxiv.org/abs/1709.07588">Abandon Statistical Significance</a> (2017)</strong>: If you want a starting point on the challenges with NHST that have led many statisticians to argue for abandoning NHST all together, and starting points for alternative ways of doing science.</li>
+<li><strong>Gelman and Tuerlinckx’s <a href="http://www.stat.columbia.edu/~gelman/research/published/francis8.pdf">Type
+S error rates for classical and Bayesian single and multiple comparisons
+procedures</a> (2000)</strong>: A comparison of the properties of Type S
+errors of frequentist and Bayesian confidence statements. Useful for how
+this all plays out in a Bayesian context. Bayesian confidence statements
+have the desirable property of being more conservative than frequentist
+ones.</li>
+<li><strong>Gelman and Carlin’s <a href="http://www.stat.columbia.edu/~gelman/research/published/retropower20.pdf">Assessing
+Type S and Type M Errors</a> (2014)</strong>: Gelman and Carlin compare
+their suggested design analysis, as we’ve written about above, to more
+traditional design analysis, through several examples, and discuss the
+desirable properties it has in more depth than I do here. It is also the
+source of the original retrodesign() function, which I re-use in the
+package with permission.</li>
+<li><strong>Lu et al’s <a href="https://bpspsychub.onlinelibrary.wiley.com/doi/full/10.1111/bmsp.12132">A
+note on Type S/M errors in hypothesis testing</a> (2018)</strong>: Lu
+and coauthors go further into the mathematical properties of Type S/M
+errors, and prove the closed form solutions implemented in
+<code>retrodesign</code>.</li>
+<li><strong>McShane et al’s <a href="https://arxiv.org/abs/1709.07588">Abandon Statistical
+Significance</a> (2017)</strong>: If you want a starting point on the
+challenges with NHST that have led many statisticians to argue for
+abandoning NHST all together, and starting points for alternative ways
+of doing science.</li>
 </ol>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
