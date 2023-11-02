@@ -1,7 +1,7 @@
 Package: retrodesign
 Type: Package
 Title: Tools for Type S (Sign) and Type M (Magnitude) Errors
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
     person("Andrew", "Timm", email = "timmandrew1@gmail.com", role = c("cre","aut")), 
     person("Andrew", "Gelman", role = c("ctb", "cph")),
@@ -33,11 +33,11 @@ Imports: graphics
 Suggests: ggplot2, knitr, rmarkdown, gridExtra, testthat
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2023-08-23 21:34:48 UTC; timma
+Packaged: 2023-11-02 15:40:44 UTC; timma
 Author: Andrew Timm [cre, aut],
   Andrew Gelman [ctb, cph],
   John Carlin [ctb, cph],
   Martijn Weterings [ctb]
 Maintainer: Andrew Timm <timmandrew1@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-08-24 07:40:02 UTC
+Date/Publication: 2023-11-02 22:20:02 UTC

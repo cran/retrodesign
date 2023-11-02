@@ -60,18 +60,20 @@ test_that("type S error works for negative numbers", {
 })
 
 test_that("All functions are robust to vector input", {
+  skip_on_cran()
   # This comes by design from the update the new non-central t-dist
   # code, but was not true in the original paper code. That was a known
   # limitation of the paper code and it was never used incorrectly in the paper
   # analysis, but a package should anticipate common mistakes.
-  # Note that to make test runtime more reasonable, we're using a fairly lax tol
+  # Note that to make test runtime more reasonable, we're using a fairly lax tol,
+  # and skipping on CRAN to be respectful of their compute.
   expect_equal(retrodesign::retrodesign(c(10,rep(0.1,100)), 1, alpha = 0.05,
                                         df = Inf, n.sims = 10^5)$type_m[1],
 
                retrodesign::retrodesign(c(10), 1, alpha = 0.05,
                                         df = Inf, n.sims = 10^5)$type_m,
 
-               tolerance = .001
+               tolerance = .01
   )
 
   expect_equal(retrodesign::retro_design_closed_form(c(.5,rep(0.1,100)), 1,
@@ -80,7 +82,7 @@ test_that("All functions are robust to vector input", {
                retrodesign::retro_design_closed_form(c(.5), 1,
                                                      alpha = 0.05)$type_m,
 
-               tolerance = .001
+               tolerance = .01
   )
 
   # This is slightly lower tolerance just t
@@ -90,7 +92,7 @@ test_that("All functions are robust to vector input", {
                retrodesign::type_m(c(10), 1,
                                                      alpha = 0.05)$type_m,
 
-               tolerance = .001
+               tolerance = .01
   )
 
 
