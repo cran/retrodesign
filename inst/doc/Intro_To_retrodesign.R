@@ -5,7 +5,7 @@ knitr::opts_chunk$set(
 )
 
 
-## ---- include=FALSE-----------------------------------------------------------
+## ----include=FALSE------------------------------------------------------------
 library(retrodesign)
 library(ggplot2)
 library(grid)

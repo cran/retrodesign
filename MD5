@@ -1,14 +1,14 @@
-9ceaea7ea3df9cbd515b34e588ebf5d0 *DESCRIPTION
+671edf9eab87ddc2a2673c11e53e0f80 *DESCRIPTION
 2e52b8f43d702dea805399d169f76e08 *LICENSE
 a3a1722ea500b408c065edc7c553bec4 *NAMESPACE
-1a09fa879a1f209b1bacec88853de1d8 *NEWS
-25eb4cdb4a31c1c762c2c58579939da1 *R/simple_hypothesis_tests.R
+519c632b86061a9194bc2332a73fa44f *NEWS
+07a4460ad02a010677b0d327f4be6632 *R/simple_hypothesis_tests.R
 9a16a544b7188cd32d71d2da058338a4 *R/visualization.R
 e8c17c421a47342a35d4930fff4fa341 *README.md
 4c4e345c0f2852c953b894f452dd5495 *build/vignette.rds
-0254e2341dc95ddd18c935f85a117b4e *inst/doc/Intro_To_retrodesign.R
+4fb16a2aee5176c9ce04aea2ad1e0368 *inst/doc/Intro_To_retrodesign.R
 f501720c45ad178c8ad0167ff14ba425 *inst/doc/Intro_To_retrodesign.Rmd
-b4dcae8645f087077007a8c7be11a16a *inst/doc/Intro_To_retrodesign.html
+ba2a02ea614d0f74d3207526b29afeaf *inst/doc/Intro_To_retrodesign.html
 30fdf7e17ba49ce192ba05d241bd5b27 *man/retro_design.Rd
 34fe2ec469f68cc8d0ea4042454bae96 *man/retro_design_closed_form.Rd
 651ba82a0328a0a9ae74f3c7f3ff0768 *man/retro_design_closed_form.list.Rd
@@ -26,5 +26,5 @@ b13a7aba53df74ef40c075514ccc9e6a *man/type_s.numeric.Rd
 99ef2b8f40251ed3fd002a305ed339fe *tests/testthat.R
 eb25a3452533c9e74e11438db2daa8c0 *tests/testthat/test_input_robustness.R
 065cefa4f7fe799cd352938a1fa48727 *tests/testthat/test_output_types.R
-29fb953041759ce7f2d92ca6ea1f7d92 *tests/testthat/test_sim_precision.R
+d8479625ca95e5cb0b926dff426d4299 *tests/testthat/test_sim_precision.R
 f501720c45ad178c8ad0167ff14ba425 *vignettes/Intro_To_retrodesign.Rmd
